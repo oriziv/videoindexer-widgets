@@ -91,10 +91,12 @@
 (function(){
     var base = 'https://www.videoindexer.ai/embed/';
     var id = '4452cf7e59';
+    var videoId = '';
     var accountId = '00000000-0000-0000-0000-000000000000';
     var queryParams = parseQueryString();
     if(queryParams) {
-      id = queryParams.id ? queryParams.id : id;
+      videoId = queryParams.videoId;
+      id = queryParams.id ? queryParams.id : (videoId? videoId :id);
       accountId = queryParams.accountId ? queryParams.accountId : accountId;
     }
 
