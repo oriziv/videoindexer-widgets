@@ -1,26 +1,29 @@
 ﻿/**
- * AMP & Video Breakdown - Iframes Communication Mediator
- * Copyright (c) 2016 Microsoft
+ * AMP & Video Indexer - Iframe Communication Mediator
+ * Copyright (c) 2020 Microsoft
  * @author Ori Ziv
  * @version v0.8.80
- * @desc Incharge the communication between videobreakdown.com iframes.
- * @link https://www.videobreakdown.com
+ * @desc In charge the communication between videoindexer.com iframe.
+ * @link https://www.videoindexer.com
  */
 
 (function () {
     'use strict';
-
-        // Jump to specific time from mesage payload
+  
+        // Jump to specific time from message payload
         function notifyWidgets(evt) {
-
+  
             if (!evt) {
                 return;
             }
             var origin = evt.origin || evt.originalEvent.origin;
-
+  
             // Validate that event comes from videoindexer domain.
-            if ((origin.indexOf(".videoindexer.ai") !== -1) && (evt.data.time !== undefined || evt.data.currentTime !== undefined || evt.data.language !== undefined)) {
-
+            if (( origin === "http://localhost:4100"
+                 || origin.includes('videoindexer.ai')
+                 || (origin.includes('vi-fe-dev') && origin.includes('cloudapp.azure.com') ))
+                 && evt.data) {
+  
                 // Pass message to other iframe.
                 if ('postMessage' in window) {
                     var iframes = window.document.getElementsByTagName('iframe');
@@ -34,17 +37,18 @@
                 }
             }
         }
-
+  
         function clearMessageEvent() {
             if (window.removeEventListener) {
                 window.removeEventListener("message", notifyWidgets);
             }
         }
-
+  
         // Listen to message events from breakdown iframes
         window.addEventListener("message", notifyWidgets, false);
-
+  
         // Clear the event if window unloads
         window.onunload = clearMessageEvent;
-
-}());
+  
+  }());
+  
